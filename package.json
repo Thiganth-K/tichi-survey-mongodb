@@ -7,7 +7,10 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "build:server": "tsc -p tsconfig.server.json",
+    "start:server": "node dist/server/index.js",
+    "start": "npm run build:server && npm run start:server"
   },
   "dependencies": {
     "@types/cors": "^2.8.18",

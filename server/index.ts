@@ -11,7 +11,13 @@ process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 const app = express();
 
 // Middleware
-app.use(cors());
+app.use(cors({
+  origin: process.env.NODE_ENV === 'production' 
+    ? ['https://your-vercel-domain.vercel.app'] 
+    : '*',
+  methods: ['GET', 'POST'],
+  credentials: true
+}));
 app.use(express.json());
 
 // Debug middleware to log all requests
