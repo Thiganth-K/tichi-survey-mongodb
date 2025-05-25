@@ -70,7 +70,7 @@ const surveyResponseSchema = new mongoose.Schema({
 const SurveyResponse = mongoose.model('SurveyResponse', surveyResponseSchema, 'TichiSurveyResponses');
 
 // Validation middleware
-const validateSurveySubmission = (req: Request, res: Response, next: NextFunction) => {
+const validateSurveySubmission = (req: Request, res: Response, next: NextFunction): void => {
   console.log('\n=== Validating Survey Submission ===');
   
   const { userInfo, responses } = req.body;
@@ -78,38 +78,42 @@ const validateSurveySubmission = (req: Request, res: Response, next: NextFunctio
   // Check if required fields exist
   if (!userInfo || !responses) {
     console.error('Missing required fields:', { userInfo: !!userInfo, responses: !!responses });
-    return res.status(400).json({ 
+    res.status(400).json({ 
       error: 'Invalid request body',
       details: 'Request must include userInfo and responses'
     });
+    return;
   }
 
   // Validate userInfo
   if (!userInfo.fullName || !userInfo.email) {
     console.error('Invalid userInfo:', userInfo);
-    return res.status(400).json({
+    res.status(400).json({
       error: 'Invalid userInfo',
       details: 'userInfo must include fullName and email'
     });
+    return;
   }
 
   // Validate responses
   if (!Array.isArray(responses) || responses.length === 0) {
     console.error('Invalid responses:', responses);
-    return res.status(400).json({
+    res.status(400).json({
       error: 'Invalid responses',
       details: 'responses must be a non-empty array'
     });
+    return;
   }
 
   // Validate each response
   for (const response of responses) {
     if (!response.questionId || response.answer === undefined) {
       console.error('Invalid response object:', response);
-      return res.status(400).json({
+      res.status(400).json({
         error: 'Invalid response object',
         details: 'Each response must include questionId and answer'
       });
+      return;
     }
   }
 
